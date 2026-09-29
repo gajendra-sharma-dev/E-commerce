@@ -23,7 +23,7 @@ const orderSchema = new Schema({
     },
   
     orderNumber:{
-       type:Number,
+       type:String,
        unique:true
     },
     
