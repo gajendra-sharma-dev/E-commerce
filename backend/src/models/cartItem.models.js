@@ -12,12 +12,12 @@ const cartitemSchema = new Schema({
         
     },
   
-    product:{
+    productId:{
         type:Schema.Types.ObjectId,
         ref:"Product"
     },
     
-    Cart:{
+    CartId:{
         type:Schema.Types.ObjectId,
         ref:"Cart"
     },
