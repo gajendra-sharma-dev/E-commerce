@@ -1,5 +1,5 @@
 import mongoose,{Schema} from "mongoose"
-
+import slugify from "slugify"
 const productSchema = new Schema({
     name:{
         type:String,
@@ -7,8 +7,8 @@ const productSchema = new Schema({
       
     },
     slug:{  // esko padna eske baare me data base save karne se phle kya hota hai
-        type:String,
-        required:true,
+       type:String,
+        unique:true,
          
 
     },
@@ -40,10 +40,30 @@ const productSchema = new Schema({
         min:[0]
     },
     isActive:{
-        type:boolean
+        type:Boolean
     },
     
 },{timestamps:true})
+
+// Auto-generate slug before saving
+productSchema.pre('save', async function (next) {
+  if (!this.isModified('name')) return next();
+
+  let baseSlug = slugify(this.name, { lower: true, strict: true });
+  let slug = baseSlug;
+  let counter = 1;
+
+  // Ensure uniqueness
+  const Product = this.constructor;
+  while (await Product.exists({ slug, _id: { $ne: this._id } })) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+
+  this.slug = slug;
+  
+});
+
 
 
 export const Product = mongoose.model("Product",productSchema)

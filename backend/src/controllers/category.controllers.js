@@ -112,8 +112,8 @@ const updateCategory = asyncHandler(async(req,res)=>{
     throw ApiError(400,"category not found")
    } 
 
-      if(name) category.name = name
-      if(description) category.description = description
+      if(name.trim()) category.name = name
+      if(description.trim()) category.description = description
 
     await  category.save({validateBeforeSave:false})
 
