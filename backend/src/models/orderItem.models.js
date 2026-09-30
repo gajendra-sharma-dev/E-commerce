@@ -12,7 +12,7 @@ const orderitemSchema = new Schema({
         
     },
   
-    product:{
+    productId:{
         type:Schema.Types.ObjectId,
         ref:"Product"
     },
@@ -27,7 +27,7 @@ const orderitemSchema = new Schema({
         unique:true,
         uppercase:true
     },
-    order:{
+    orderId:{
         type:Schema.Types.ObjectId,
         ref:"Order"
     },
