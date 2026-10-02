@@ -44,7 +44,7 @@ import updateAddressRouter from "./router/address.router.js"
 import deleteAddressRouter from "./router/address.router.js"
 import getAllAddressRouter from "./router/address.router.js"
 
-import createCartRouter from "./router/cart.router.js"
+
 import  getOrderRouter from "./router/order.router.js" 
 import updateOrderRouter from "./router/order.router.js"
 import deleteOrderRouter from "./router/order.router.js"
@@ -62,6 +62,11 @@ import updateOrderItem from "./router/orderItem.router.js"
 import getOrderItemRouter from "./router/orderItem.router.js"
 import deleteOrderItemRouter from "./router/orderItem.router.js"
 
+
+import createCarItemRouter from "./router/cartitem.router.js"
+import getCartItemRouter from "./router/cartitem.router.js"
+import updateCartItemRouter from "./router/cartitem.router.js"
+import deleteCartItemRouter from "./router/cartitem.router.js"
 
 app.use("/api/v1/users",registerRouter)
 app.use("/api/v1/users",loginRouter)
@@ -85,7 +90,7 @@ app.use("/api/v1/address",updateAddressRouter)
 app.use("/api/v1/address",deleteAddressRouter)
 app.use("/api/v1/address",getAllAddressRouter)
 
-app.use("/api/v1/cart",createCartRouter)
+
 
 
 app.use("/api/v1/order",createOrderRouter)
@@ -103,4 +108,12 @@ app.use("/api/v1/orderitem",createOrderitemRouter)
 app.use("/api/v1/orderitem",updateOrderItem)
 app.use("/api/v1/orderitem",getOrderItemRouter)
 app.use("/api/v1/orderitem",deleteOrderItemRouter)
+
+
+app.use("/api/v1/cartitem",createCarItemRouter)
+app.use("/api/v1/cartitem",getCartItemRouter)
+app.use("/api/v1/cartitem",updateCartItemRouter)
+app.use("/api/v1/cartitem",deleteCartItemRouter)
+
+
 export {app}

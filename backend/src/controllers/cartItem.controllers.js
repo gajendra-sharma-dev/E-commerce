@@ -7,14 +7,12 @@ import mongoose from "mongoose"
 
 
 const createCartItem = asyncHandler(async(req,res)=>{
-    const {unitPrice,quanitity,productId,CartId} = req.body
+    const {unitPrice,quanitity,productId} = req.body
 
     if(!mongoose.isValidObjectId(productId)) {
         throw new ApiError(400,"product id is not vaild")
     }
-    if(!mongoose.isValidObjectId(CartId)) {
-        throw new ApiError(400,"cart id is not vaild")
-    }
+   
 
     if([unitPrice,quanitity].some((filed)=> filed === undefined || filed === null || isNaN(Number(filed)))) {
         throw new ApiResponse(400,"all filed is reuired")
@@ -25,7 +23,7 @@ const createCartItem = asyncHandler(async(req,res)=>{
             unitPrice,
             quanitity,
             productId:productId,
-            CartId:CartId
+            customer:req.user._id
         }
     )
   return res.status(201).json(new ApiResponse(201,newCart,"Cart item is create succssfully"))
@@ -60,14 +58,14 @@ const updateCartItem = asyncHandler(async(req,res)=>{
 if([unitPrice,quanitity].some((filed)=> filed === undefined || filed === null || isNaN(Number(filed)))) {
         throw new ApiResponse(400,"all filed is reuired")
     }
-  const cartObject =  await Cartitem.findById(cartitemId).populate("CartId","customer")
+  const cartObject =  await Cartitem.findById(cartitemId).populate("customer")
     console.log(cartObject);
     
     if(!cartObject) {
         throw new ApiError(400,"cart is not found")
     }
 
-    if(cartObject.CartId?.customer?.toString() !== req.user?._id.toString()) {
+    if(cartObject.customer?._id.toString() !== req.user?._id.toString()) {
         throw new ApiError(400,"you are not auturised to updated this cart item")
     }
 
@@ -87,19 +85,18 @@ const deleteCartItem = asyncHandler(async(req,res)=>{
   }
  
 
-  const cartObject =  await Cartitem.findById(cartitemId).populate("CartId","customer")
+  const cartObject =  await Cartitem.findById(cartitemId).populate("customer")
     console.log(cartObject);
     
     if(!cartObject) {
         throw new ApiError(400,"cart is not found")
     }
 
-    if(cartObject.CartId?.customer?.toString() !== req.user?._id.toString()) {
+    if(cartObject.customer?._id.toString() !== req.user?._id.toString()) {
         throw new ApiError(400,"you are not auturised to delete this cart item")
     }
 
-    await Cartitem.findByIdAndUpdate(cartitemId)
-       
+    await Cartitem.findByIdAndDelete(cartitemId)
 
     return res.status(200).json(new ApiResponse(200,{},"cart item delete succssfully"))
 

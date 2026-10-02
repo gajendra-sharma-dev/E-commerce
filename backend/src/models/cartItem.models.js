@@ -17,10 +17,13 @@ const cartitemSchema = new Schema({
         ref:"Product"
     },
     
-    CartId:{
-        type:Schema.Types.ObjectId,
-        ref:"Cart"
-    },
+   
+    customer:{  
+            type:Schema.Types.ObjectId,
+            ref:"User"
+             
+    
+        }
    
     
 },{timestamps:true})
