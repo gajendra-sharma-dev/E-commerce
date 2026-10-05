@@ -32,9 +32,19 @@ const userSchema = new Schema({
         required:true,
        
     },
+    role :{
+        type:String,
+        enum:["user","admin"],
+        default:"user"
+    },
     password:{
         type:String,
         required:true
+    },
+
+    verfiyed : {
+        type:Boolean,
+        default:false
     },
     refreshToken:{
         type:String

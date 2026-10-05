@@ -6,28 +6,18 @@ const productSchema = new Schema({
         required:true,
       
     },
-    slug:{  // esko padna eske baare me data base save karne se phle kya hota hai
-       type:String,
-        unique:true,
-         
-
-    },
+   
     description:{
          type:String,
          required:true,
 
     },
-    sku:{  //seko bi padna contoller me kase kaam karta hai sku id se product ki phehane hoti hai
-        type:String,
-        required:true,
-        unique:true,
-        uppercase:true
-    },
+  
     category:{
-        type:Schema.Types.ObjectId,
-        ref:"Category"
+       type:String,
+       required:true
     },
-    stockQuanitity:{
+    stockQuantity:{
         type:Number,
         required:true,
         default:0,
@@ -39,9 +29,23 @@ const productSchema = new Schema({
         default:0,
         min:[0]
     },
-    isActive:{
-        type:Boolean
+     imageUrl : {
+        type:String,
+        required:true
+        
     },
+    rating :{
+  type:Number,
+  default:0,
+  min:[0],
+  max:[5]
+    },
+        numReviews:{
+        type:Number,
+        default:0,
+        min:[0]
+    }
+
     
 },{timestamps:true})
 

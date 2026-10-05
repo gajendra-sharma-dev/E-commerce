@@ -2,44 +2,56 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import {Product} from "../models/product.models.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Category } from "../models/categories.models.js";
-import { v4 as uuidv4 } from 'uuid';
 import mongoose from "mongoose";
+import cloudnary from "../utils/cloudnary.js";
+
 const createProduct = asyncHandler(async(req,res)=>{
-    const {name,description,stockQuanitity,price,isActive,category} = req.body
-
-    if([name,description].some((filed)=> filed?.trim() === "")) {
-        throw ApiError(400,"All filed is required")
-    } 
- if(!mongoose.isValidObjectId(category)) {
-    throw new ApiError(400,"category is not vaild")
- }
-
-  
-
-     const categoryDoucment =  await Category.findById(category)
+    const {name,description,price,stockQuantity,category} = req.body
+    let imageUrl = req.file?.path
+    if(!imageUrl) {
+        throw new ApiError(400,"image is required")
+    }
+    
+   if(!name || name?.trim() === "") {
+    throw new ApiError(400,"name is required")
+   }
+   if(!description || description?.trim() === "") {
+    throw new ApiError(400,"description is required")
+   }
+   if(!price || price <= 0) {
+    throw new ApiError(400,"price is required and must be a positive number")
+   }
+   if(!stockQuantity || stockQuantity < 0) {
+    throw new ApiError(400,"stock quantity is required and must be a non-negative number")
+   }
      
-     if(!categoryDoucment) {
-        throw new ApiError(400,"category not found")
-     }
+   try {
+     let imageUrl = req.file ? req.file.path : "";
+    if(req.file) {
+   const result = await cloudnary.uploader.upload(req.file.path);
+     imageUrl = result.secure_url
+   }
 
-   
-     
-   
- const product = await Product.create(
+   const product = await Product.create(
         {
             name,
             description,
-            sku:uuidv4(),
-            stockQuanitity,
+            imageUrl,
+            stockQuantity,
             price,
-            isActive,
-            category:categoryDoucment?._id
+            category
+            
+            
         }
     )
-
+    
     return res.status(201).
     json(new ApiResponse(201,product,"product create succssfully"))
+
+   } catch (error) {
+     console.log(error,"sever error");
+     throw new ApiError(500,"sever error")
+   }
 })
 
 const getProductById = asyncHandler(async(req,res)=>{
@@ -62,11 +74,9 @@ const getProductById = asyncHandler(async(req,res)=>{
 
 
  const updateProduct = asyncHandler(async(req,res)=>{
-    const {name,description,stockQuanitity,price,isActive} = req.body
+    const {name,description,price,stockQuantity,category} = req.body
     const {productId} = req.params
-    if([name,description].some((filed)=> !filed || filed.trim() === "")) {
-        throw new ApiError(400,"all filed is required")
-    }
+  
 
      if(!mongoose.isValidObjectId(productId)) {
     throw ApiError(400,"product id is not vaild")
@@ -89,10 +99,17 @@ const getProductById = asyncHandler(async(req,res)=>{
 
   if(name.trim()) product.name = name
   if(description.trim()) product.description = description
-  if(stockQuanitity !== undefined) product.stockQuanitity = stockQuanitity
+  if(stockQuantity !== undefined) product.stockQuantity = stockQuantity
   if(price !== undefined) product.price = price
-  if(isActive !== undefined) product.isActive = isActive
-
+  if(category.trim()) product.category = category
+     if(req.file) {
+        console.log(req.file);
+        
+     const result = await cloudnary.uploader.upload(req.file.path);
+    console.log(result);
+    
+     product.imageUrl = result.secure_url
+   }
 
  await product.save({validateBeforeSave:false})
   return res.status(200).
@@ -119,4 +136,12 @@ const getProductById = asyncHandler(async(req,res)=>{
      json(new ApiResponse(200,{},"product delete succssfully"))
  })
 
-export {createProduct,getProductById,updateProduct,deleteProduct}
+ const getAllproduct = asyncHandler(async(req,res)=>{
+    const product = await Product.find({})
+    if(!product) {
+        throw new ApiError(400,"empty nothing here")
+    }
+    return res.status(201).json(new ApiResponse(201,product,"products fetch successfully"))
+ })
+
+export {createProduct,getProductById,updateProduct,deleteProduct,getAllproduct}

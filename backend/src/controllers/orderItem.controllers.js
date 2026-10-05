@@ -9,12 +9,9 @@ import mongoose from 'mongoose';
 
 
 const createOrderItem = asyncHandler(async(req,res)=>{
-    const {unitPrice,quanitity,productId,orderId,totelPrice} = req.body
+    const {unitPrice,quanitity,totelPrice} = req.body
 
-      if(!mongoose.isValidObjectId(productId)) {
-        throw new ApiError(400,"product id is not vaild")
-      }
-
+     
       if([unitPrice,quanitity,totelPrice].some((filed) => filed === undefined || filed === null  || isNaN(Number(filed)))) {
         throw new ApiError(400,"All filed is required")
       }

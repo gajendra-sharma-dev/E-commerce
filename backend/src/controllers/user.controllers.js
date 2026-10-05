@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
-
+import sendEmail from "../utils/sendEmail.js"
 const genreteAccessAndRfreshToken = async(userId) =>{
   try {
     const user = await User.findById(userId)
@@ -24,6 +24,7 @@ const genreteAccessAndRfreshToken = async(userId) =>{
 const registerUser = asyncHandler(async(req,res)=>{
     const {firstName,email,password,phoneNumber,lastName} = req.body
       // console.log(req.body);
+     
     
  if([firstName,email,password,phoneNumber,lastName].some((field)=>(field?.trim() === ""))) {
     throw new ApiError(400,"all Filed is required")
@@ -32,6 +33,7 @@ const registerUser = asyncHandler(async(req,res)=>{
          if(existingUser) {
             throw new ApiError(400,"Already this email exsit")
          }
+          
 
      const user =  await User.create(
                 {
@@ -45,20 +47,46 @@ const registerUser = asyncHandler(async(req,res)=>{
                 },
               
             )
+            if(user) {
+               const otp = Math.floor(1000 + Math.random() * 9000).toString()
+               const message = `Welcome to our application, ${user.firstName} Thank you for registering with us. Your OTP is ${otp}. Please use this OTP to verify your account.`
+               console.log(message);
+               await sendEmail(user.email,"Welcome to our application",message)
+            }   
+
+              
    const createUser = await User.findById(user._id).select("-password -refreshToken")
    if(!createUser) {
     throw new ApiError(400,"user not find")
+
+
    }
-            return res.status(200).
-            json(new ApiResponse(200,createUser,"user register successfully"))
+   const {AccessToken,refreshToken}  = await genreteAccessAndRfreshToken(createUser._id)
+
+      const options = {
+                    httpOnly:true,
+                    secure:true,
+                }
+        
+            res.status(200).
+            cookie("AccessToken",AccessToken,options).
+            cookie("refreshToken",refreshToken,options).
+            json(new ApiResponse(200,{createUser,AccessToken,refreshToken},"user register successfully"))
 
 })
 
 const loginUser  = asyncHandler(async(req,res)=>{
     const {firstName,email,password} = req.body
+   
 
-    if([firstName,email,password].some((filed)=>(filed?.trim() === ""))) {
-      throw new ApiError(400,"All filed is required")
+    if(!firstName || firstName?.trim() === "") {
+        throw new ApiError(400,"firstName is required")
+    }
+    if(!email || email?.trim() === "") {
+        throw new ApiError(400,"email is required")
+    }
+    if(!password || password?.trim() === "") {
+      throw new ApiError(400,"password is required")
     }
 
  const exitingUser = await User.findOne({$or:[{firstName},{email}]})
@@ -72,9 +100,11 @@ const loginUser  = asyncHandler(async(req,res)=>{
       throw new ApiError(400,"password is wrong")
      }
 
-     const {AccessToken,refreshToken}  = await genreteAccessAndRfreshToken(exitingUser._id)
+   
       
      const loginuser = await User.findById(exitingUser._id).select("-password  -refreshToken")
+    console.log(loginuser)
+       const {AccessToken,refreshToken}  = await genreteAccessAndRfreshToken(loginuser._id)
  
 
 const options = {
@@ -82,7 +112,8 @@ const options = {
    secure:true,
 }
 
-res.status(200).
+
+ return res.status(200).
 cookie("AccessToken",AccessToken,options).
 cookie("refreshToken",refreshToken,options).
 json(new ApiResponse(200, {loginuser, AccessToken, refreshToken }, "User logged in successfully"))

@@ -56,6 +56,7 @@ import createProductRouter from "./router/product.router.js"
 import getProductByIdRouter from "./router/product.router.js"
 import updateProductRouter from "./router/product.router.js"
 import deleteProductRouter from "./router/product.router.js"
+import getAllProductRouter from "./router/product.router.js"
 
 import createOrderitemRouter from "./router/orderItem.router.js"
 import updateOrderItem from "./router/orderItem.router.js"
@@ -103,6 +104,7 @@ app.use("/api/v1/product",createProductRouter)
 app.use("/api/v1/product",getProductByIdRouter)
 app.use("/api/v1/product",updateProductRouter)
 app.use("/api/v1/product",deleteProductRouter)
+app.use("/api/v1/product",getAllProductRouter)
 
 app.use("/api/v1/orderitem",createOrderitemRouter)
 app.use("/api/v1/orderitem",updateOrderItem)
