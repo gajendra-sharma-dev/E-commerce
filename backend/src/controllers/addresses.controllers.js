@@ -62,10 +62,12 @@ const getAllAddress = asyncHandler(async(req,res)=>{
 
     const filter = query ? {city:{$regex:query,$options:'i'}} : {}
 
-    const sortOptions = {createdAt:-1}
+
+ let sortOptions = {createdAt:-1}
+
 
     if(sortType === "oldest") {
-        sortOptions = {createdAt:1}
+        sortOptions = {createdAt:1}//acending order albabatcic
     }else if(sortType === "az") {
         sortOptions = {city:1}
     }else if(sortType === "za"){

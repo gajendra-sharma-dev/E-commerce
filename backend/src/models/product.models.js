@@ -34,18 +34,22 @@ const productSchema = new Schema({
         required:true
         
     },
-    rating :{
-  type:Number,
-  default:0,
-  min:[0],
-  max:[5]
-    },
-        numReviews:{
-        type:Number,
-        default:0,
-        min:[0]
-    }
-
+  slug :{
+    type:String,
+    required:true
+  },
+ sku :{
+    type:String,
+    required:true
+ },
+      
+categoryId :{
+    type:Schema.Types.ObjectId,
+    ref:"Category"
+},
+isActive:{
+    type:Boolean
+}
     
 },{timestamps:true})
 

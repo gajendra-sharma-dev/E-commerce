@@ -11,7 +11,7 @@ const genreteAccessAndRfreshToken = async(userId) =>{
     const refreshToken = user.genrateRefreshToken()
  
        user.refreshToken = refreshToken
-         user.save({validateBeforeSave:false})
+      await   user.save({validateBeforeSave:false})
  
          return {AccessToken,refreshToken}
  }catch (error) {

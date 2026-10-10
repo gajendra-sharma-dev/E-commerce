@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 
 
 const createOrderItem = asyncHandler(async(req,res)=>{
-    const {unitPrice,quanitity,totelPrice} = req.body
+    const {unitPrice,quanitity,totelPrice,orderId,productId} = req.body
 
      
       if([unitPrice,quanitity,totelPrice].some((filed) => filed === undefined || filed === null  || isNaN(Number(filed)))) {
@@ -18,6 +18,10 @@ const createOrderItem = asyncHandler(async(req,res)=>{
 
       if(!mongoose.isValidObjectId(orderId)) {
         throw new ApiError(400,"order id is not vaild")
+      }
+
+       if(!mongoose.isValidObjectId(productId)) {
+        throw new ApiError(400,"product id is not vaild")
       }
 
   const product =  await Product.findById(productId)
@@ -70,7 +74,7 @@ const updateOrderItem = asyncHandler(async(req,res)=>{
   const orderItem =  await Orderitem.findById(orderItemId).populate("orderId")
   
   if(!orderItem) {
-    throw ApiError(400,"order item you want to update not found")
+    throw new ApiError(400,"order item you want to update not found")
   }
 
   if(orderItem.orderId?.user?.toString() !==  req.user?._id.toString()) {

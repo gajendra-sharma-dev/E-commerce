@@ -58,7 +58,7 @@ const getProductById = asyncHandler(async(req,res)=>{
     const {productId} = req.params
 
     if(!mongoose.isValidObjectId(productId)) {
-        throw ApiError(400,"product id is not vaild")
+        throw new ApiError(400,"product id is not vaild")
     }
  const product =  await Product.findById(productId)
 
@@ -79,7 +79,7 @@ const getProductById = asyncHandler(async(req,res)=>{
   
 
      if(!mongoose.isValidObjectId(productId)) {
-    throw ApiError(400,"product id is not vaild")
+    throw new ApiError(400,"product id is not vaild")
  }
 
    const product = await Product.findById(productId)
@@ -97,11 +97,11 @@ const getProductById = asyncHandler(async(req,res)=>{
  ///ortanrgation rehe raha hai abi
 
 
-  if(name.trim()) product.name = name
-  if(description.trim()) product.description = description
+  if(name?.trim()) product.name = name
+  if(description?.trim()) product.description = description
   if(stockQuantity !== undefined) product.stockQuantity = stockQuantity
   if(price !== undefined) product.price = price
-  if(category.trim()) product.category = category
+  if(category?.trim()) product.category = category
      if(req.file) {
         console.log(req.file);
         

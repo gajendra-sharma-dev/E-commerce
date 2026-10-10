@@ -18,9 +18,9 @@ const cartitemSchema = new Schema({
     },
     
    
-    customer:{  
+      cartId:{  
             type:Schema.Types.ObjectId,
-            ref:"User"
+            ref:"Cart"
              
     
         }

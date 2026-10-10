@@ -15,7 +15,7 @@ const createCartItem = asyncHandler(async(req,res)=>{
    
 
     if([unitPrice,quanitity].some((filed)=> filed === undefined || filed === null || isNaN(Number(filed)))) {
-        throw new ApiResponse(400,"all filed is reuired")
+        throw new ApiError(400,"all filed is reuired")
     }
 
  const newCart = await Cartitem.create(
@@ -56,7 +56,7 @@ const updateCartItem = asyncHandler(async(req,res)=>{
   }
  
 if([unitPrice,quanitity].some((filed)=> filed === undefined || filed === null || isNaN(Number(filed)))) {
-        throw new ApiResponse(400,"all filed is reuired")
+        throw new ApiError(400,"all filed is reuired")
     }
   const cartObject =  await Cartitem.findById(cartitemId).populate("customer")
     console.log(cartObject);

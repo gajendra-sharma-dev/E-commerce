@@ -7,11 +7,14 @@ import mongoose from "mongoose"
 
 const createCategory = asyncHandler(async(req,res)=>{
     const {name,description,parentId} = req.body
- //  console.log(req.body);
+ 
    
   
     if([name,description].some((filed)=>(filed?.trim() === ""))){
         throw new ApiError(400, "All fields are required")
+    }
+    if(!parentId) {
+        throw new ApiError(400,"parent id must required")
     }
 
  const alreadyExists = await Category.findOne({name})
@@ -109,11 +112,11 @@ const updateCategory = asyncHandler(async(req,res)=>{
  const category = await Category.findById(categoryId)
 
    if(!category) {
-    throw ApiError(400,"category not found")
+    throw new ApiError(400,"category not found")
    } 
 
-      if(name.trim()) category.name = name
-      if(description.trim()) category.description = description
+      if(name?.trim()) category.name = name
+      if(description?.trim()) category.description = description
 
     await  category.save({validateBeforeSave:false})
 

@@ -9,10 +9,6 @@ import mongoose from 'mongoose';
 const createOrder = asyncHandler(async(req,res)=>{
     const {totelAmount,taxAmount,subTotel,shippingCost,Status} = req.body
 
-
-     if([totelAmount,taxAmount,subTotel,shippingCost,Status].some((filed) => filed?.trim() === "")) {
-       throw new ApiError(400,"all filed is required")
-    }
   const addressUser = await Addresses.findOne({customer:req.user?._id})
   console.log(addressUser)
     if(!addressUser) {
@@ -83,11 +79,11 @@ const updateOrder = asyncHandler(async(req,res)=>{
   }
 
   const filed = {}
-  if(totelAmount.trim())  filed.totelAmount = totelAmount
-  if(taxAmount.trim())  filed.taxAmount = taxAmount
-  if(subTotel.trim())  filed.subTotel = subTotel
-  if(shippingCost.trim())  filed.shippingCost = shippingCost
-  if(Status.trim())  filed.Status = Status
+  if(totelAmount !== undefined)  filed.totelAmount = totelAmount
+  if(taxAmount !== undefined)  filed.taxAmount = taxAmount
+  if(subTotel !== undefined)  filed.subTotel = subTotel
+  if(shippingCost !== undefined)  filed.shippingCost = shippingCost
+  if(Status)  filed.Status = Status
 
 
 const updateorder   =  await Order.findByIdAndUpdate(orderId,{$set:
