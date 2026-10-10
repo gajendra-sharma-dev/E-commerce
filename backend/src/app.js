@@ -69,6 +69,13 @@ import getCartItemRouter from "./router/cartitem.router.js"
 import updateCartItemRouter from "./router/cartitem.router.js"
 import deleteCartItemRouter from "./router/cartitem.router.js"
 
+import carteCartRouter from "./router/cart.router.js"
+import getCartByIdRouter from "./router/cart.router.js"
+import getAllCartRouter  from "./router/cart.router.js"
+import deleteCartRouter from "./router/cart.router.js"
+
+
+
 app.use("/api/v1/users",registerRouter)
 app.use("/api/v1/users",loginRouter)
 app.use("/api/v1/users",logoutRouter)
@@ -116,6 +123,13 @@ app.use("/api/v1/cartitem",createCarItemRouter)
 app.use("/api/v1/cartitem",getCartItemRouter)
 app.use("/api/v1/cartitem",updateCartItemRouter)
 app.use("/api/v1/cartitem",deleteCartItemRouter)
+
+
+
+app.use("/api/v1/cart",carteCartRouter)
+app.use("/api/v1/cart",getCartByIdRouter)
+app.use("/api/v1/cart",getAllCartRouter)
+app.use("/api/v1/cart",deleteCartRouter)
 
 
 export {app}

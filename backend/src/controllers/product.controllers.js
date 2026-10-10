@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import cloudnary from "../utils/cloudnary.js";
 
 const createProduct = asyncHandler(async(req,res)=>{
-    const {name,description,price,stockQuantity,category} = req.body
+    const {name,description,price,stockQuantity} = req.body
     let imageUrl = req.file?.path
     if(!imageUrl) {
         throw new ApiError(400,"image is required")
